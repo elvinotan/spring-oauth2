@@ -50,8 +50,8 @@ public class CustomAuthenticationProvider implements AuthenticationManager{
 	        	UserDetails userDetail = customUserDetailService.loadUserByUsername(name);
 	        	if (userDetail == null) throw new UsernameNotFoundException("User "+name+" not found");
 	        	
-//	        	boolean match = passwordEncoder.matches(password, userDetail.getPassword());
-//	        	if (!match) throw new BadCredentialsException("Password is not match");
+	        	boolean match = passwordEncoder.matches(password, userDetail.getPassword());
+	        	if (!match) throw new BadCredentialsException("Password is not match");
 	        	
 	        	
 	        	return new UsernamePasswordAuthenticationToken(name, password, new ArrayList<>());
