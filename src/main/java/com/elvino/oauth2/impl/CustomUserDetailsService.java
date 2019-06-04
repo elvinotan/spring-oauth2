@@ -48,7 +48,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 //    			user.isActive(), 
 //    			authorities);
     	
-    	return null;
+    	return new org.springframework.security.core.userdetails.User(
+			"username", 
+			"password", 
+			true, 
+			true, 
+			true, 
+			true, 
+			authorities);
         
     }
 
