@@ -172,3 +172,107 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 }
 ```
+4. Buat class Authorization  untuk 
+```
+/**
+ *The @EnableResourceServer annotation adds a filter of type OAuth2AuthenticationProcessingFilter automatically
+ *to the Spring Security filter chain.
+ * 
+ * Class ini untuk menghadle request yang masuk 
+ * untuk path /private/** harus di authenticated. Contoh : http://localhost:8080/medallionSalesMobile/private/account?access_token=abcdefghijklmanobqrstuvwxyz
+ * untuk path /websocket/** harus di authenticated. Contoh : http://localhost:8080/medallionSalesMobile/websocket/getNav?access_token=abcdefghijklmanobqrstuvwxyz
+ * selain ke 2 path tersebut maka tidak perlu di authenticated
+ */
+@Configuration
+@EnableResourceServer
+public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http
+            .headers()
+                .frameOptions()
+                .disable()
+                .and()
+            .authorizeRequests()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/public/**").permitAll()
+                .antMatchers("/websocket/**").authenticated()
+                .antMatchers("/private/**").authenticated();
+    }
+
+
+}
+```
+5. Pada aplikasi ini terdapat 2 jenis login DB dan LDAP</br>
+a. DB = Cek user berdasarkan DB 
+b. LDAP = Cek user berdasarkan LDAP third party framework
+But Implementasi dari AUthenticationManager, dimana authenticate dilakukan secara manual oleh develper
+```
+@Component
+public class CustomAuthenticationProvider implements AuthenticationManager{
+	private Logger log = LoggerFactory.getLogger(CustomAuthenticationProvider.class);
+	
+	private final String LOGIN_TYPE_LDAP = "LDAP";
+	private final String LOGIN_TYPE_DB = "DB";
+	
+	@Autowired
+	private CustomUserDetailsService customUserDetailService;
+	
+	@Autowired
+    protected PasswordEncoder passwordEncoder;
+	
+	@Value("${app.login.type}")
+	private String loginType;
+	
+	@Override
+	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+		String name = authentication.getName();
+        String password = authentication.getCredentials().toString();
+        
+        try {
+        	log.debug("LOGIN TYPE "+loginType);
+	        if (LOGIN_TYPE_DB.equals(loginType)) {
+	        	
+	        	UserDetails userDetail = customUserDetailService.loadUserByUsername(name);
+	        	if (userDetail == null) throw new UsernameNotFoundException("User "+name+" not found");
+	        	
+	        	boolean match = passwordEncoder.matches(password, userDetail.getPassword());
+	        	if (!match) throw new BadCredentialsException("Password is not match");
+	        	
+	        	
+	        	return new UsernamePasswordAuthenticationToken(name, password, new ArrayList<>());
+	        	
+	        }else if (LOGIN_TYPE_LDAP.equals(loginType)) {
+	        	
+	        	String domain = "ldapdev2.medallion.co";
+	    		String alias = "ldapdev2.medallion.co";
+	    		String host = "192.168.0.225";
+	    		
+	    		// User yang ada di ldap adalah
+	    		// username : SIMIANUSER1, password : SimianSuper01
+	    		// Koneksi ke ldap ini tidak menggunakan framework spring boot, tapi manual
+	    		
+	        	ActiveDirectory activeDirectory = new ActiveDirectory(name, password, domain, alias, host);
+				NamingEnumeration<SearchResult> result = activeDirectory.searchUser(name, "username", null);
+				
+				if (!result.hasMore()) { throw new UsernameNotFoundException("User "+name+ " not Found"); }
+	        	        	
+	            return new UsernamePasswordAuthenticationToken(name, password, new ArrayList<>());
+	        }else {
+	        	
+	        	throw new UsernameNotFoundException("Unknown login type");
+	        }
+        }catch(Exception e) {
+        	log.error(e.getMessage(), e);
+        	return null;
+        }
+	}
+//
+//	@Override
+//	public boolean supports(Class<?> authentication) {
+//		 return authentication.equals(UsernamePasswordAuthenticationToken.class);
+//	}
+
+}
+```
