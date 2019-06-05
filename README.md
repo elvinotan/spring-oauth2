@@ -205,8 +205,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 }
 ```
 5. Pada aplikasi ini terdapat 2 jenis login DB dan LDAP</br>
-a. DB = Cek user berdasarkan DB 
-b. LDAP = Cek user berdasarkan LDAP third party framework
+a. DB = Cek user berdasarkan DB </br>
+b. LDAP = Cek user berdasarkan LDAP third party framework</br> ```Lihat file ActiveDirectory.java untuk cara query ke LDAP```
 But Implementasi dari AUthenticationManager, dimana authenticate dilakukan secara manual oleh develper
 ```
 @Component
