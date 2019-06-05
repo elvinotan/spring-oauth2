@@ -26,6 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     	// Saat ini masih blm menerapkan DB, jadi hanya menggunakan data dummy untuk
     	// username : 'username',
     	// password : 'password'
+    	// Bila udah menggunakan Db, maka di tempat ini lah anda lakukan fetch data base on username melalui repo
     	
     	return new org.springframework.security.core.userdetails.User(
 			"username", 			
