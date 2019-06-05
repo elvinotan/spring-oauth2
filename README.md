@@ -20,13 +20,13 @@ Dapat mengenerate token, refresh token, check token, autorize url
 
 # Dependencies
 Oauth2 Server ini akan di daftarkan pada server config, sehingga kita butuh config dependencies
-oauth2
-Jpa = untuk fetch data dari database dan authenticate dgn user password
-Web = Agar bisa mengexpose /oauth url
-security = untuk mekanisme UserServiceDetail
-Config Client = Untuk register ke Config Server
-Eureka Discovery = Untuk register ke rureka
-H2 = untuk database
+oauth2</br>
+Jpa = untuk fetch data dari database dan authenticate dgn user password</br>
+Web = Agar bisa mengexpose /oauth url</br>
+security = untuk mekanisme UserServiceDetail</br>
+Config Client = Untuk register ke Config Server</br>
+Eureka Discovery = Untuk register ke rureka</br>
+H2 = untuk database</br>
 
 # How to
 Pada pembuatan project ini di meski kita mencantumkan dependencies H2, namun kita tidak mengimplementasinya, kita akan menggunakan data dummy untuk kemudahan, untuk penerapan H2 bisa di lihat di spring-rest.</br>
