@@ -306,7 +306,7 @@ Url : http://localhost:8080/oauth/token
 Grant Type : password
 Authorization : Basic Auth (client_id, client_secreat)
 Header : Content Type application/x-www-form-urlencoded
-Body : grant_type password, password password, username username (Note harus return yang sama dari UserDetail ya kalo tidak error Bad Credential, passwordnya di encode dgn PasswrodEncoder)
+Body : grant_type password, password {password}, username {username} (Note harus return yang sama dari UserDetail ya kalo tidak error Bad Credential, passwordnya di encode dgn PasswrodEncoder)
 Response : {
     "access_token": "42991f14-5af3-419c-b9af-2b41437fc0e8",
     "token_type": "bearer",
@@ -321,7 +321,35 @@ Url : http://localhost:8080/oauth/token
 Grant Type : refresh_token
 Authorization : Basic Auth (client_id, client_secreat)
 Header : Content Type application/x-www-form-urlencoded
-Body : grant_type refresh_token, refresh_token refresh_token
-Response : { "access_token": "3389ac46-4b4d-43cd-a2b3-46916690dd07", "token_type": "bearer", "refresh_token": "74c0298a-b35a-4a07-a6d3-8fdfed376825", "expires_in": 4888, "scope": "read write trust" }
-*/
+Body : grant_type refresh_token, refresh_token {refresh_token}
+Response : {
+    "access_token": "e6bf76b6-6786-4be8-b197-39940e1ef211",
+    "token_type": "bearer",
+    "refresh_token": "36e2fd90-d3a1-4f57-8031-c1775ff56335",
+    "expires_in": 4999,
+    "scope": "read write trust"
+}
+
+```
+```
+Note : Cara check token yang sudah ada
+Url : http://localhost:8080/oauth/check_token
+Authorization : Basic Auth (client_id, client_secreat)
+Header : Content Type application/x-www-form-urlencoded
+Body :  token {token}
+Response : {
+    "aud": [
+        "oauth2-resource"
+    ],
+    "active": true,
+    "exp": 1559729465,
+    "user_name": "username",
+    "client_id": "simian",
+    "scope": [
+        "read",
+        "write",
+        "trust"
+    ]
+}
+
 ```
