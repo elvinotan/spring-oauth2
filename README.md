@@ -367,3 +367,10 @@ Response : {
 
 ```
 
+Tahap Kedua
+Pada contoh di atas untuk mengambil token telah berhasil, kita akan menghubungakan dengan Zull sehingga Authorization ini bisa di access dari mana saja. ternyata apabila kita coba access http://localhost:9090/springoauth2/oauth/token akan terjadi error UnAuthrorized. Kita harus sedikan
+```
+zuul:
+  sensitive-headers: Cookie,Set-Cookie
+```
+Sepertinya kalo header kita terdapat Cookie dia akan block for security
