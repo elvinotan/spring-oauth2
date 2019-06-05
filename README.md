@@ -3,8 +3,8 @@ Pada project ini menjelaskan bagaimana cara membuat Security OAuth2 server. Sebe
 
 # Penerapan
 Penerapan Security Aouth2 ini bermacam macam bentuknya, tergantung kebijaksanaan masing masing, contoh penerapan
-a. lakukan pengecekan pertama kali saja, begitu sukses maka komunikasi antar microservices bebas tanpa security
-b. selalu  lakukan pengecekan setiap mengakses microservices endpooint
+a. lakukan pengecekan pertama kali saja, begitu sukses maka komunikasi antar microservices bebas tanpa security</br>
+b. selalu  lakukan pengecekan setiap mengakses microservices endpooint</br>
 
 # Target
 Dapat mengenerate token, refresh token, check token, autorize url
