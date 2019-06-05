@@ -101,14 +101,14 @@ public class SpringOauth2Application {
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager; //di ambil dari CustomAuthenticationProvider
+
+    @Autowired
+	private CustomUserDetailsService userDetailService; 
 
     @Autowired
     private PasswordEncoder passwordEncoder;
     
-    @Autowired
-	private CustomUserDetailsService userDetailService;
-
     /**
      * Setting up the endpointsconfigurer authentication manager.
      * The AuthorizationServerEndpointsConfigurer defines the authorization and token endpoints and the token services.
@@ -118,9 +118,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
-                .authenticationManager(authenticationManager) // ini menandakan untuk authentication kita handle sendiri
-                .userDetailsService(userDetailService)
-                .exceptionTranslator(loggingExceptionTranslator()); // agar muncul logging lebih detail 
+        	.authenticationManager(authenticationManager) // iCustomAuthenticationProvider
+            .userDetailsService(userDetailService) //inject userDatailService
+            .exceptionTranslator(loggingExceptionTranslator()); // agar muncul logging lebih detail 
     }
 
     /**
@@ -138,14 +138,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients
-                .inMemory()
-                .withClient("simian") // withclient dan secret di gunakan pada saat login dimana Basic Auth menggunakan ini
-                .secret(passwordEncoder.encode("k3mb4nggul4"))
-                .authorizedGrantTypes("client_credentials", "authorization", "password", "refresh_token") //client_credentials=ambil data client, password=untuk validate user, refresh_token untuk ambil token baru
-                .authorities("ROLE_CLIENT","ROLE_TRUSTED_CLIENT")
-                .scopes("read", "write", "trust")
-                .resourceIds("oauth2-resource")
-                .accessTokenValiditySeconds(5000); // valid access_token dalam detik
+        .inMemory()
+        .withClient("simian") // withclient dan secret di gunakan pada saat login dimana Basic Auth menggunakan ini
+        .secret(passwordEncoder.encode("k3mb4nggul4"))
+        .authorizedGrantTypes("client_credentials", "authorization", "password", "refresh_token") //client_credentials=ambil data client, password=untuk validate user, refresh_token untuk ambil token baru
+        .authorities("ROLE_CLIENT","ROLE_TRUSTED_CLIENT")
+        .scopes("read", "write", "trust")
+        .resourceIds("oauth2-resource")
+        .accessTokenValiditySeconds(5000); // valid access_token dalam detik
     }
 
     /**
