@@ -91,6 +91,11 @@ public class SpringOauth2Application {
 ```
 3. Buat class untuk Autorization Server
 ```
+/**
+ * Configures the authorization server.
+ * The @EnableAuthorizationServer annotation is used to configure the OAuth 2.0 Authorization Server mechanism,
+ * together with any @Beans that implement AuthorizationServerConfigurer (there is a handy adapter implementation with empty methods).
+ */
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
@@ -100,6 +105,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+	private CustomUserDetailsService userDetailService;
 
     /**
      * Setting up the endpointsconfigurer authentication manager.
@@ -111,6 +119,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
                 .authenticationManager(authenticationManager) // ini menandakan untuk authentication kita handle sendiri
+                .userDetailsService(userDetailService)
                 .exceptionTranslator(loggingExceptionTranslator()); // agar muncul logging lebih detail 
     }
 
@@ -222,8 +231,9 @@ a. DB = Cek user berdasarkan DB </br>
 b. LDAP = Cek user berdasarkan LDAP third party framework</br> ```Lihat file ActiveDirectory.java untuk cara query ke LDAP```
 But Implementasi dari AUthenticationManager, dimana authenticate dilakukan secara manual oleh develper
 ```
+
 @Component
-public class CustomAuthenticationProvider implements AuthenticationManager{
+public class CustomAuthenticationProvider implements AuthenticationProvider{
 	private Logger log = LoggerFactory.getLogger(CustomAuthenticationProvider.class);
 	
 	private final String LOGIN_TYPE_LDAP = "LDAP";
@@ -281,11 +291,11 @@ public class CustomAuthenticationProvider implements AuthenticationManager{
         	return null;
         }
 	}
-//
-//	@Override
-//	public boolean supports(Class<?> authentication) {
-//		 return authentication.equals(UsernamePasswordAuthenticationToken.class);
-//	}
+
+	@Override
+	public boolean supports(Class<?> authentication) {
+		 return authentication.equals(UsernamePasswordAuthenticationToken.class);
+	}
 
 }
 ```
