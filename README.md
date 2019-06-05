@@ -353,3 +353,17 @@ Response : {
 }
 
 ```
+```
+Note : Cara check client credential yang sudah ada
+Url : http://localhost:8080/oauth/check_token
+Authorization : Basic Auth (client_id, client_secreat)
+Header : Content Type application/x-www-form-urlencoded
+Body :  grant_type client_credentials
+Response : {
+    "access_token": "fed7f1af-69d0-452b-b301-587fcec326d7",
+    "token_type": "bearer",
+    "expires_in": 3928,
+    "scope": "read write trust"
+}
+
+```
