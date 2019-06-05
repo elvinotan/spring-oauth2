@@ -35,7 +35,7 @@ public class CustomAuthenticationProvider implements AuthenticationManager{
 	@Autowired
     protected PasswordEncoder passwordEncoder;
 	
-	@Value("${medallion.mobile.login.type}")
+	@Value("${app.login.type}")
 	private String loginType;
 	
 	@Override
