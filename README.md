@@ -8,5 +8,14 @@ b. selalu  lakukan pengecekan setiap mengakses microservices endpooint</br>
 
 # Target
 Dapat mengenerate token, refresh token, check token, autorize url
+```
+{
+    "access_token": "e559fb50-b21f-448f-ae95-0a583dcd5f4f",
+    "token_type": "bearer",
+    "refresh_token": "16b9a913-84f4-473a-b92d-67b4c804eb52",
+    "expires_in": 3409,
+    "scope": "read write trust"
+}
+```
 
 
