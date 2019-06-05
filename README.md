@@ -185,7 +185,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
  */
 @Configuration
 @EnableResourceServer
-public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
+	
+	@Autowired
+	private CustomUserDetailsService userDetailService;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -198,10 +201,20 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/public/**").permitAll()
                 .antMatchers("/websocket/**").authenticated()
-                .antMatchers("/private/**").authenticated();
+                .antMatchers("/private/**").authenticated()
+                .and().rememberMe().key("uniqeAndSecret").userDetailsService(userDetailService);
     }
 
-
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+    
+    @Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailService);
+	}
 }
 ```
 5. Pada aplikasi ini terdapat 2 jenis login DB dan LDAP</br>
@@ -278,6 +291,7 @@ public class CustomAuthenticationProvider implements AuthenticationManager{
 ```
 5. Testing dengan menggunakan postman</br>
 ```
+Note : Cara ambil token dengan passing username dan password
 Url : http://localhost:8080/oauth/token
 Grant Type : password
 Authorization : Basic Auth (client_id, client_secreat)
@@ -290,4 +304,14 @@ Response : {
     "expires_in": 4669,
     "scope": "read write trust"
 }
+```
+```
+Note : Cara refresh token yang sudah ada
+Url : http://localhost:8080/oauth/token
+Grant Type : refresh_token
+Authorization : Basic Auth (client_id, client_secreat)
+Header : Content Type application/x-www-form-urlencoded
+Body : grant_type refresh_token, refresh_token refresh_token
+Response : { "access_token": "3389ac46-4b4d-43cd-a2b3-46916690dd07", "token_type": "bearer", "refresh_token": "74c0298a-b35a-4a07-a6d3-8fdfed376825", "expires_in": 4888, "scope": "read write trust" }
+*/
 ```
