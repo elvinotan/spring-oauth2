@@ -276,3 +276,18 @@ public class CustomAuthenticationProvider implements AuthenticationManager{
 
 }
 ```
+5. Testing dengan menggunakan postman</br>
+```
+Url : http://localhost:8080/oauth/token
+Grant Type : password
+Authorization : Basic Auth (client_id, client_secreat)
+Header : Content Type application/x-www-form-urlencoded
+Body : grant_type password, password password, username username (Note harus return yang sama dari UserDetail ya kalo tidak error Bad Credential, passwordnya di encode dgn PasswrodEncoder)
+Response : {
+    "access_token": "42991f14-5af3-419c-b9af-2b41437fc0e8",
+    "token_type": "bearer",
+    "refresh_token": "c173a2c3-c6c7-4bfb-9e14-9fc34f065cb9",
+    "expires_in": 4669,
+    "scope": "read write trust"
+}
+```
