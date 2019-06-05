@@ -34,4 +34,42 @@ Pada tahapan pertama ini kita akan buat standalone Aouth2</br>
 Pada tahap kedua kita akan meng-integrasikan dengan zull, sehingga bisa di access oleh siapa pun</br>
 
 Tahapan Pertama</br>
+1. Buat bootstrap.yml untuk connect spring config
+```
+---
+spring:
+  application:
+    name: SpringOauth2
+  cloud:
+    config:
+      uri: http://localhost:9080
+      failFast: false
+app:
+  login:
+    type: DB
 
+#LDAP, DB
+```
+
+```
+SpringOauth2.yml
+---
+server:
+  port: 9091
+  address: 0.0.0.0
+
+logging:
+  level:
+    com:
+      simian: DEBUG
+      
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9083/eureka      
+
+# LDAP, DB
+app:
+  login:
+    type: DB   
+```
