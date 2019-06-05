@@ -355,7 +355,7 @@ Response : {
 ```
 ```
 Note : Cara check client credential yang sudah ada
-Url : http://localhost:8080/oauth/check_token
+Url : http://localhost:8080/oauth/token
 Authorization : Basic Auth (client_id, client_secreat)
 Header : Content Type application/x-www-form-urlencoded
 Body :  grant_type client_credentials
