@@ -51,8 +51,8 @@ app:
 #LDAP, DB
 ```
 
-```
-SpringOauth2.yml
+
+dilanjutkan dengan buat SpringOauth2.yml di sisi config
 ---
 server:
   port: 9091
