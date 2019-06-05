@@ -1,10 +1,17 @@
 package com.elvino.oauth2.config;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+
+import com.elvino.oauth2.impl.CustomUserDetailsService;
 
 /**
  *The @EnableResourceServer annotation adds a filter of type OAuth2AuthenticationProcessingFilter automatically
@@ -17,7 +24,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
  */
 @Configuration
 @EnableResourceServer
-public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
+	
+	@Autowired
+	private CustomUserDetailsService userDetailService;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -30,8 +40,18 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/public/**").permitAll()
                 .antMatchers("/websocket/**").authenticated()
-                .antMatchers("/private/**").authenticated();
+                .antMatchers("/private/**").authenticated()
+                .and().rememberMe().key("uniqeAndSecret").userDetailsService(userDetailService);
     }
 
-
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+    
+    @Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailService);
+	}
 }

@@ -17,6 +17,8 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 
+import com.elvino.oauth2.impl.CustomUserDetailsService;
+
 /**
  * Configures the authorization server.
  * The @EnableAuthorizationServer annotation is used to configure the OAuth 2.0 Authorization Server mechanism,
@@ -31,6 +33,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+	private CustomUserDetailsService userDetailService;
 
     /**
      * Setting up the endpointsconfigurer authentication manager.
@@ -42,6 +47,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
                 .authenticationManager(authenticationManager) // ini menandakan untuk authentication kita handle sendiri
+                .userDetailsService(userDetailService)
                 .exceptionTranslator(loggingExceptionTranslator()); // agar muncul logging lebih detail 
     }
 
@@ -63,7 +69,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .inMemory()
                 .withClient("simian") // withclient dan secret di gunakan pada saat login dimana Basic Auth menggunakan ini
                 .secret(passwordEncoder.encode("k3mb4nggul4"))
-                .authorizedGrantTypes("client_credentials", "authorization", "password", "refresh_token") //cleint_credentials=ambil data client, password=untuk validate user, refresh_token untuk ambil token baru
+                .authorizedGrantTypes("client_credentials", "authorization", "password", "refresh_token") //client_credentials=ambil data client, password=untuk validate user, refresh_token untuk ambil token baru
                 .authorities("ROLE_CLIENT","ROLE_TRUSTED_CLIENT")
                 .scopes("read", "write", "trust")
                 .resourceIds("oauth2-resource")

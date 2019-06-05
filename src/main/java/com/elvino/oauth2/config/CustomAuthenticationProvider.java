@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import com.elvino.oauth2.impl.CustomUserDetailsService;
 
 @Component
-public class CustomAuthenticationProvider implements AuthenticationManager{
+public class CustomAuthenticationProvider implements AuthenticationProvider{
 	private Logger log = LoggerFactory.getLogger(CustomAuthenticationProvider.class);
 	
 	private final String LOGIN_TYPE_LDAP = "LDAP";
@@ -81,10 +81,10 @@ public class CustomAuthenticationProvider implements AuthenticationManager{
         	return null;
         }
 	}
-//
-//	@Override
-//	public boolean supports(Class<?> authentication) {
-//		 return authentication.equals(UsernamePasswordAuthenticationToken.class);
-//	}
+
+	@Override
+	public boolean supports(Class<?> authentication) {
+		 return authentication.equals(UsernamePasswordAuthenticationToken.class);
+	}
 
 }
